@@ -24,5 +24,15 @@ If your done working on your contribution for a decent part of time, submit your
 All merge conflicts must be resolved before finalizing your pull request.
 Requests with conflicts will not be accepted.
 
+# Contributors
+
+### Project Manager
+[RhapidFyre](https://github.com/rhapidfyre)
+
+### Project Collaborators
+
+### Contributors
+
+
 ## License
 This gamemode is unlicensed. Anyone may use, distribute, edit, or otherwise alter these files at any time, or use them for personal development/education.
