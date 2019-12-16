@@ -1,42 +1,17 @@
-language: c
-
+# .travis.yaml
+language: python
 sudo: false
 
 env:
-  global:
-    - LUAROCKS=2.3.0
-  matrix:
-    - LUA=lua5.1
-    - LUA=lua5.2
-    - LUA=lua5.3
-    - LUA=luajit     # latest stable version (2.0.4)
-    - LUA=luajit2.0  # current head of 2.0 branch
-    - LUA=luajit2.1  # current head of 2.1 branch
-
-branches:
-  only:
-    - master
+  - LUA="lua=5.3"
 
 before_install:
-  - source .travis/setenv_lua.sh
-  - pip install --user cpp-coveralls
-  - luarocks install Lua-cURL         --server=https://luarocks.org/dev
-  - luarocks install luacov-coveralls --server=https://luarocks.org/dev
-  - luarocks install lunitx
-
+  - pip install hererocks
+  - hererocks lua_install -r^ --$LUA
+  - export PATH=$PATH:$PWD/lua_install/bin
+  
 install:
-  - luarocks make rockspecs/foo-scm-0.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
-
+  - luarocks install busted
+  
 script:
-  - cd test
-  - lua -e "print(require'cURL'.version())"
-  - lunit.sh test.lua
-
-after_success:
-  - coveralls -b .. -r .. -i ./src --dump c.report.json
-  - luacov-coveralls -j c.report.json -v
-
-notifications:
-  email:
-    on_success: change
-    on_failure: always
+  - busted --verbose
