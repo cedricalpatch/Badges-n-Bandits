@@ -4,7 +4,18 @@ RegisterNetEvent('bb:playerinfo')
 
 
 local zones = {} -- List of zone names
+local tracker = false -- Start tracking information (miles, position, etc)
 
+
+-- Format; To get local client's info, use index 'ServerId(PlayerId())'
+-- Access with given Accessors/Mutators
+local plyInfo = {}
+	-- name: The player's display name
+  -- duty: True if player is on law duty
+  -- leo:  Player's cop rank
+  -- civ:  Player's pivilian rank
+  
+  
 -- Discord Rich Presence
 Citizen.CreateThread(function()
 	while true do
@@ -21,15 +32,6 @@ AddEventHandler('onClientMapStart', function()
   exports.spawnmanager:setAutoSpawn(true)
   exports.spawnmanager:forceRespawn()
 end)
-
--- Format; To get local client's info, use index 'ServerId(PlayerId())'
--- Access with given Accessors/Mutators
-local plyInfo = {}
-	-- name: The player's display name
-  -- duty: True if player is on law duty
-  -- leo:  Player's cop rank
-  -- civ:  Player's pivilian rank
-  
 
 --- EXPORT GetZoneName()
 -- Returns the name for the area defined by script
@@ -148,6 +150,21 @@ Citizen.CreateThread(function()
 	end
 end)
 
+--[[
+function ReportPosition(doReport)
+  tracker = doReport
+  if tracker then print("DEBUG - Now tracking player's position.\nReporting vector3() to the server every 12 seconds.")
+    Citizen.CreateThread(function()
+      while tracker do
+        local myPos = GetEntityCoords(PlayerPedId())
+        TriggerServerEvent('bb:save_pos', myPos)
+        Citizen.Wait(12000)
+      end
+      print("DEBUG - Finished tracking player's position (tracker = FALSE)")
+    end)
+  end
+end
+]]
 
 --- EVENT: bb:playerinfo
 -- Sets plyInfo to the values passed by the server

@@ -1,13 +1,12 @@
 
 RegisterServerEvent('bb:save_pos')
-RegisterServerEvent('bb:assigncharinfo')
 RegisterServerEvent('bb:unload')
 
 
 local recentDrop = {}     -- Preserves clInfo when player disconnects
 local useDiscord = false  -- Toggles discord messages created by this script
 local positions  = {}     -- Holds last known position ( [ID] => vector3() )
-local clInfo     = {}     -- Client Info ( see AssignClientInfo() )
+local clInfo     = {}     -- Client Info ( see AssignInfo() )
 
 
 --- EXPORT: PrettyPrint()
@@ -45,7 +44,9 @@ end
 AddEventHandler('bb:save_pos', function(pos)
   local client = source
   local cid    = clInfo[client]
-  if cid and pos then positions[cid] = pos end
+  if cid and pos then
+    positions[cid] = pos
+  end
 end)
 
 
@@ -82,9 +83,9 @@ AddEventHandler('playerDropped', function(reason)
   local cid        = clInfo[client].charid
   local clientInfo = GetPlayerName(client)
   if cid then SavePlayerPos(cid, positions[cid]) end
-  ConsolePrint(
-    "^1"..tostring(clientInfo).." disconnected. ^7("..tostring(reason)..")"
-  )
+    PrettyPrint(
+      "^1"..tostring(clientInfo).." disconnected. ^7("..tostring(reason)..")"
+    )
   if useDiscord then
     exports['bb_chat']:DiscordMessage(
       16711680, tostring(clientInfo).." Disconnected", tostring(reason), ""
@@ -122,6 +123,7 @@ function UniqueId(client, id)
         clInfo[client].unique = AssignUniqueId(client)
       end
     end
+    
     return clInfo[client].unique
   end
   PrettyPrint("No player ID given to UniqueId() from "..GetInvokingResource())
@@ -134,6 +136,7 @@ end
 -- @param client The server ID of the player info to clear
 function ClearCharInfo(client)
 	clInfo[client] = {}
+  TriggerClientEvent('bb:playerinfo', (-1), client, nil)
 end
 
 
@@ -157,34 +160,41 @@ function RecentDisconnect(client, reason)
 end
 
 
---- AssignClientInfo()
+--- EXPORT: AssignInfo()
 -- Builds a table of player info to avoid running SQL queries unnecessarily
 -- @param client Server id of the player being assigned
 -- @param tbl The table of info to assign
-function AssignClientInfo(client, tbl)
+function AssignInfo(client, tbl, rejoin)
 	if client then
-  
-    if not tbl then tbl = {} end
-  
-    -- If the table doesn't exist, create it - Otherwise, it's an update
-    if not clInfo[client] then clInfo[client] = {} end
+    -- If rejoining, then tbl is a copy of clInfo[client]
+    if rejoin then clInfo[client] = tbl
+    else
+      -- tbl: 'uid', 'cid', (more to come)
+      if not tbl then tbl = {} end
     
-    -- If no UID passed, find one. Otherwise, use it.
-    if not tbl.uid then clInfo[client].unique = AssignUniqueId(client)
-    else                clInfo[client].unique = tbl.uid
+      -- If the table doesn't exist, create it - Otherwise, it's an update
+      if not clInfo[client] then clInfo[client] = {} end
+      
+      -- Filter out magic/special characters
+      clInfo[client].name = string.gsub(GetPlayerName(client), "[^a-zA-Z0-9 %p]", "")
+      
+      -- If no UID passed, find one. Otherwise, use it.
+      if not tbl.uid then clInfo[client].unique = AssignUniqueId(client)
+      else                clInfo[client].unique = tbl.uid
+      end
+      PrettyPrint("UID #"..tostring(clInfo[client].unique).." assigned to Player #"..client)
+      
+      -- DEBUG - Revisit this, CID should never be passed to this nil
+      -- If no CID passed, use nil for now. Otherwise, use it.
+      if not tbl.cid then clInfo[client].charid = nil
+      else                clInfo[client].charid = tbl.cid
+      end
+      PrettyPrint("CID #"..tostring(clInfo[client].charid).." assigned to Player #"..client)
     end
-    PrettyPrint("UID #"..tostring(clInfo[client].unique).." assigned to Player #"..client)
-    
-    -- DEBUG - Revisit this, CID should never be passed to this nil
-    -- If no CID passed, use nil for now. Otherwise, use it.
-    if not tbl.cid then clInfo[client].charid = nil
-    else                clInfo[client].charid = tbl.cid
-    end
-    PrettyPrint("CID #"..tostring(clInfo[client].charid).." assigned to Player #"..client)
+    TriggerClientEvent('bb:playerinfo', (-1), client, clInfo[client])
     
 	end
 end
-AddEventHandler('bb:assigncharinfo', AssignClientInfo)
 
 
 --- 'bb:unload'

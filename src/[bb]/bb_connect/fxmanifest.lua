@@ -19,8 +19,9 @@ game "rdr3"
 dependency 'bb'
 ui_page "nui/ui.html"
 files {"nui/discord.jpg","nui/ui.html","nui/ui.js","nui/ui.css"}
-client_scripts {"cl_config.lua", "cl_connect.lua"}
-server_scripts {"sv_config.lua", "sv_connect.lua"}
+client_scripts {"cl_config.lua", "cl_creator.lua", "cl_connect.lua"}
+server_scripts {"sv_config.lua", "sv_creator.lua", "sv_connect.lua"}
+
 server_exports {}
 
 exports {

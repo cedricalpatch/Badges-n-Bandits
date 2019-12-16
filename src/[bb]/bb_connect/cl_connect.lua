@@ -1,6 +1,6 @@
 
 -- Badges & Bandits: Connection Script (CLIENT)
-RegisterNetEvent('bb:create_ready')
+RegisterNetEvent('bb:connect_ack')
 local connected = false
 
 -- NUI: Connect
@@ -43,7 +43,14 @@ AddEventHandler('onClientResourceStart', function(resname)
 end)
 
 
-AddEventHandler('bb:create_ready', function()
+AddEventHandler('bb:connect_ack', function(charInfo)
   connected = true
+  if charInfo then
+    print("DEBUG - Reloading last played character.")
+    ReloadCharacter(charInfo)
+  else
+    print("DEBUG - Going to character creator.")
+    CreateCharacter()
+  end
 end)
 

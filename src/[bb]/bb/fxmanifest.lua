@@ -29,8 +29,9 @@ file {
 }
 
 server_exports {
-  'UniqueId', -- The UniqueID of the Player
+  'UniqueId',    -- The UniqueID of the Player
   'PrettyPrint', -- A nicely formatted print message
+  'AssignInfo',  -- Assigns character values rx'd from SQL
 }
 
 exports {
