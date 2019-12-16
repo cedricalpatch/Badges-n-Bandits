@@ -135,16 +135,10 @@ end
 -- when a disconnected player rejoins shortly after disconnecting
 function RecentDisconnect(client, reason)
   local cid = clInfo[client].charid
-  Citizen.Wait(3000)
+  Citizen.Wait(8000)
   PrettyPrint("Preserving character disconnect information.")
-  recentDrop[cid] = clInfo[client]
-  PrettyPrint("Finished preserving Character #"..tostring(cid).." for player #"..tostring(client)..".")
+  PrettyPrint("Finished preserving Character #"..tostring(cid).." for Player #"..tostring(client)..".")
   ClearCharInfo(client)
-  Citizen.CreateThread(function()
-    Citizen.Wait(300000)
-    PrettyPrint("Character #"..tostring(cid).." failed to reconnect after 5 minutes.")
-    recentDrop[cid] = nil
-  end)
 end
 
 --- EXPORT: AssignInfo()
@@ -153,13 +147,7 @@ end
 -- @param tbl The table of info to assign
 function AssignInfo(client, tbl, rejoin)
   if not tbl then tbl = {} end
-  
-  -- If joining player recently dropped, reinstate their old stats info
-  for k,v in pairs (recentDrop) do 
-    if v.charid == tbl.cid then clInfo[client] = tbl end
-    return 0
-  end
-  
+
 	if client then
     -- If rejoining, then tbl is a copy of clInfo[client]
     if rejoin then clInfo[client] = tbl
