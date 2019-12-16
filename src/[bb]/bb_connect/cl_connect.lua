@@ -10,7 +10,7 @@ RegisterNUICallback("ConnectMenu", function(data, callback)
   if data.action == "exit" then 
     SendNUIMessage({hidemenu = true})
     SetNuiFocus(false, false)
-  
+
   end
 
 end)
@@ -21,16 +21,15 @@ RegisterCommand('relog', function()
   TriggerServerEvent('bb:create_player')
 end)
 
-
 -- On connection to the server
 --AddEventHandler('onClientGameTypeStart', function()   
 AddEventHandler('onClientResourceStart', function(resname)
   if GetCurrentResourceName() == resname then
-  
+
     Citizen.Wait(100)
-    
+
     print("DEBUG - Requesting for the server to let me spawn.")
-    
+
     Citizen.CreateThread(function()
       -- Keep probing the server until we're loaded
       while not connected do 
@@ -42,7 +41,6 @@ AddEventHandler('onClientResourceStart', function(resname)
   end
 end)
 
-
 AddEventHandler('bb:connect_ack', function(charInfo)
   connected = true
   if charInfo then
@@ -53,4 +51,3 @@ AddEventHandler('bb:connect_ack', function(charInfo)
     CreateCharacter()
   end
 end)
-

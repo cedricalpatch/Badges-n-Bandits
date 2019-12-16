@@ -19,7 +19,6 @@ function CreateCharacter()
   end)
 end
 
-
 --- ReloadCharacter()
 -- Reloads the last played character with argument charInfo
 -- @param charInfo Table with character information

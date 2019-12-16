@@ -1,10 +1,10 @@
 
 --[[
   Badges n' Bandits: Connection Scripts
-  
+
   Contributors:
   - RhapidFyre
-  
+
   This resource contains all the information needed for players who are 
   connecting, and how to handle their information. For example, when someone
   connects to the server and needs to retrieve their stats, this script handles

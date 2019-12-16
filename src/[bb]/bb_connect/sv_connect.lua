@@ -4,7 +4,6 @@ RegisterServerEvent('bb:create_player')
 
 local pprint = function(msg) exports['bb']:PrettyPrint(msg) end
 
-
 --- GetPlayerInformation()
 -- Retrieves all of the IDs we need and returns them as a table
 -- @param client The player's Server ID
@@ -16,7 +15,7 @@ function GetPlayerInformation(client)
     ['stm'] = "", ['soc'] = "", ['red'] = "", ['discd'] = "",
     ['ip'] = GetPlayerEndpoint(client)
   }
-  
+
   for _,id in pairs (clientInfo) do 
     if string.sub(id, 1, string.len("steam:")) == "steam:" then
       infoTable['stm'] = id
@@ -28,13 +27,12 @@ function GetPlayerInformation(client)
       infoTable['discd'] = id
     end
   end
-  
+
   local filtered = GetPlayerName(client)
   infoTable['user'] = string.gsub(GetPlayerName(client), "[%W]", "")
   print("DEBUG - User Values:\n"..json.encode(infoTable))
   return infoTable
 end
-
 
 --- CreateUniqueId()
 -- Creates a new entry to the 'players' table of the SQL Database, and then 
@@ -42,11 +40,11 @@ end
 -- @param client The Player's Server ID.
 -- @return nil if invalid, 0 if not found.
 function CreateUniqueId(client)
-  
+
   if not client then return 0 end
-  
+
   -- Filter username for special characters
-  
+
   -- SQL: Insert new user account for new player
   -- If steamid and fiveid are nil, the procedure will return 0
   local ids = GetPlayerInformation(client)
@@ -69,12 +67,11 @@ function CreateUniqueId(client)
   return uid
 end
 
-
 --- CreateSession()
 -- Retrieves the player's last played character, OR sends them to creation
 -- @param client The Player's Server ID
 function CreateSession(client)
-  
+
   -- Retrieve all their character information
   exports['ghmattimysql']:execute(
     "SELECT * FROM characters WHERE id = @uid",
@@ -88,8 +85,7 @@ function CreateSession(client)
         --[[ exports['bb_chat']:DiscordMessage(
           65280, GetPlayerName(client).." has joined the game!", "", ""
         ) ]]
-      
-      
+
       else
         Citizen.Wait(1000)
         pprint("No characters found for "..GetPlayerName(client)..".")
@@ -103,9 +99,8 @@ function CreateSession(client)
       TriggerClientEvent('bb:connect_ack', client, charInfo[1])
     end
   )
-  
-end
 
+end
 
 --- EVENT 'bb:create_player'
 -- Received by a client when they're spawned and ready to click play
@@ -114,16 +109,16 @@ AddEventHandler('bb:create_player', function()
   local client     = source
   local ids     = GetPlayerInformation(client)
   local ustring = GetPlayerName(client).." ("..client..")"
-  
+
   if doJoin then
     pprint("^2"..ustring.." connected.^7")
   end
-  
+
   if ids then
     if dMsg then
       pprint("Steam ID or FiveM License exists. Retrieving Unique ID.")
     end
-  
+
     -- SQL: Retrieve character information
     exports['ghmattimysql']:scalar(
       "SELECT id FROM players "..
@@ -153,7 +148,7 @@ AddEventHandler('bb:create_player', function()
         CreateSession(client)
       end
     )
-    
+
   else
     pprint("^1"..ustring.." disconnected. ^7(No ID Validation Obtained)")
     DropPlayer(client,

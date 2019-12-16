@@ -2,10 +2,8 @@
 -- Badges & Bandits: Client Main Script (CLIENT MASTER)
 RegisterNetEvent('bb:playerinfo')
 
-
 local zones = {} -- List of zone names
 local tracker = false -- Start tracking information (miles, position, etc)
-
 
 -- Format; To get local client's info, use index 'ServerId(PlayerId())'
 -- Access with given Accessors/Mutators
@@ -14,8 +12,7 @@ local plyInfo = {}
   -- duty: True if player is on law duty
   -- leo:  Player's cop rank
   -- civ:  Player's pivilian rank
-  
-  
+
 -- Discord Rich Presence
 Citizen.CreateThread(function()
 	while true do
@@ -46,7 +43,6 @@ function GetZoneName(zName)
 	return zName
 end
 
-
 ---------- ENTITY ENUMERATOR --------------
 local entityEnumerator = {
   __gc = function(enum)
@@ -58,7 +54,6 @@ local entityEnumerator = {
   end
 }
 
-
 local function EnumerateEntities(initFunc, moveFunc, disposeFunc)
   return coroutine.wrap(function()
     local iter, id = initFunc()
@@ -66,21 +61,20 @@ local function EnumerateEntities(initFunc, moveFunc, disposeFunc)
       disposeFunc(iter)
       return
     end
-    
+
     local enum = {handle = iter, destructor = disposeFunc}
     setmetatable(enum, entityEnumerator)
-    
+
     local next = true
     repeat
       coroutine.yield(id)
       next, id = moveFunc(iter)
     until not next
-    
+
     enum.destructor, enum.handle = nil, nil
     disposeFunc(iter)
   end)
 end
-
 
 --- EXPORT EnumerateObjects()
 -- Used to loop through all objects rendered by the client
@@ -90,7 +84,6 @@ function EnumerateObjects()
   return EnumerateEntities(FindFirstObject, FindNextObject, EndFindObject)
 end
 
-
 --- EXPORT EnumeratePeds()
 -- Used to loop through all objects rendered by the client
 -- @return The table of entities
@@ -98,7 +91,6 @@ end
 function EnumeratePeds()
   return EnumerateEntities(FindFirstPed, FindNextPed, EndFindPed)
 end
-
 
 --- EXPORT EnumerateVehicles()
 -- Used to loop through all objects rendered by the client
@@ -108,7 +100,6 @@ function EnumerateVehicles()
   return EnumerateEntities(FindFirstVehicle, FindNextVehicle, EndFindVehicle)
 end
 
-
 --- EXPORT EnumeratePickups()
 -- Used to loop through all pickups rendered by the client
 -- @return The table of entities
@@ -117,7 +108,6 @@ function EnumeratePickups()
   return EnumerateEntities(FindFirstPickup, FindNextPickup, EndFindPickup)
 end
 -------------------------------------------------	
-	
 
 --- EXPORT GetClosestPlayer()
 -- Finds the closest player
@@ -140,7 +130,6 @@ function GetClosestPlayer()
 	return cPly
 end
 
-
 -- Enable PVP
 Citizen.CreateThread(function()
 	while true do
@@ -150,7 +139,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
---[[
 function ReportPosition(doReport)
   tracker = doReport
   if tracker then print("DEBUG - Now tracking player's position.\nReporting vector3() to the server every 12 seconds.")
@@ -164,7 +152,6 @@ function ReportPosition(doReport)
     end)
   end
 end
-]]
 
 --- EVENT: bb:playerinfo
 -- Sets plyInfo to the values passed by the server
@@ -176,7 +163,6 @@ end
 RegisterNetEvent('bb:playerinfo')
 AddEventHandler('bb:playerinfo', PlayerInfo)
 
-
 --- EXPORT GetPlayerInfo()
 -- Called by other scripts to retrieve their character info from MySQL
 -- @param iPly the server id of the player client wants the info from
@@ -185,7 +171,6 @@ function GetPlayerInfo(iPly)
 	return plyInfo[iPly]
 end
 
-
 -- NUI: MainMenu
 -- Handles NUI functionality from JQuery/JS to Lua
 RegisterNUICallback("MainMenu", function(data, callback)
@@ -193,8 +178,7 @@ RegisterNUICallback("MainMenu", function(data, callback)
   if data.action == "exit" then 
     SendNUIMessage({hidemenu = true})
     SetNuiFocus(false, false)
-  
+
   end
 
 end)
-
