@@ -23,4 +23,4 @@ install:
   - luarocks install lyaml
 
 script:
-  - lua spec/connect_test.lua
+  - lua src/[bb]/bb_connect/unit_test.lua
