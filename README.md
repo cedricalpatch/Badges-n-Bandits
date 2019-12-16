@@ -30,8 +30,11 @@ Requests with conflicts will not be accepted.
 [RhapidFyre](https://github.com/rhapidfyre)
 
 ### Project Collaborators
+Peron(s) who manage(s) the Github Repo & Change the Gamemode Version
 
 ### Contributors
+Peron(s) who contributed at least once to the release version of the gamemode
+
 
 
 ## License
