@@ -1,21 +1,36 @@
-language: erlang
+language: c
 
 env:
-  - LUA=""
-  - LUA="luajit"
+  global:
+    - LUAROCKS=2.3.0
+  matrix:
+    - LUA=lua5.1
+    - LUA=lua5.2
+    - LUA=lua5.3
+    - LUA=luajit
+    - LUA=luajit2.0
+    - LUA=luajit2.1
+
+before_install:
+  - source .travis/setenv_lua.sh
+  - luarocks install luasec
+  - luarocks install moonscript
+
+install:
+  - luarocks make
+
+script: busted
 
 branches:
   only:
     - master
-
-install:
-  - sudo apt-get install luajit
-  - sudo apt-get install luarocks
-  - sudo luarocks install luafilesystem
-  - sudo luarocks install busted
-
-script: "busted spec"
-
-notifications:
-  webhooks:
-    - https://discordapp.com/api/webhooks/656254300351365150/olnPeBE95z0ugPP8qkGONgAn9HXmmyanEyNRf1hlMbUmI7ZdfuGsdyt11kSjvW_EHR-s
+    
+after_success:
+  - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+  - chmod +x send.sh
+  - ./send.sh success $WEBHOOK_URL
+  
+after_failure:
+  - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+  - chmod +x send.sh
+  - ./send.sh failure $WEBHOOK_URL
