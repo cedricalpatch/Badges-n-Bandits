@@ -2,7 +2,6 @@
 RegisterServerEvent('bb:save_pos')
 RegisterServerEvent('bb:unload')
 
-local recentDrop = {}     -- Preserves clInfo when player disconnects
 local useDiscord = false  -- Toggles discord messages created by this script
 local positions  = {}     -- Holds last known position ( [ID] => vector3() )
 local clInfo     = {}     -- Client Info ( see AssignInfo() )
