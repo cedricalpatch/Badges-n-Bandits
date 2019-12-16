@@ -1,11 +1,9 @@
 
 -- Unit Testing
-local bbserver = require 'server_main.lua'
+local bbserver = require '/src/[bb]/bb/server_main.lua'
 
---[[
-describe('bbclient', function()
-  it('adds numbers', function()
-    assert.equal(5, mylib.add(2,3))
+describe('bbserver', function()
+  it('Invalid Client ID', function()
+    assert.equal(0, bbserver.CreateUniqueId())
   end)
 end)
-]]

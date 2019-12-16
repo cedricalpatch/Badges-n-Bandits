@@ -1,26 +1,23 @@
-language: c
-
+language: python
 sudo: false
 
 env:
-  global:
-    - LUAROCKS=2.2.0
-  matrix:
-    - LUA=lua5.3
-
-branches:
-  only:
-    - master
+  - LUA="lua=5.3"
 
 before_install:
-  - source .travis/setenv_lua.sh
-
+  - pip install hererocks
+  - hererocks lua_install -r^ --$LUA
+  - export PATH=$PATH:$PWD/lua_install/bin
+  
 install:
-  - luarocks install luasocket
-  - luarocks install lsocket
-  - luarocks install penlight
-  - luarocks install cwtest
-  - luarocks install lyaml
-
+  - luarocks install luacheck
+  - luarocks install busted
+  - luarocks install luacov
+  - luarocks install luacov-coveralls
+  
 script:
-  - lua src/[bb]/bb_connect/unit_test.lua
+  - luacheck --std max+busted *.lua spec
+  - busted --verbose --coverage
+
+after_success:
+  - luacov-coveralls -e $TRAVIS_BUILD_DIR/lua_install
