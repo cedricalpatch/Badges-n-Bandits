@@ -1,6 +1,6 @@
 
 -- Unit Testing
-local bbserver = require '/src/[bb]/bb/server_main.lua'
+local bbserver = require '[bb]/bb/server_main.lua'
 
 describe('bbserver', function()
   it('Invalid Client ID', function()
