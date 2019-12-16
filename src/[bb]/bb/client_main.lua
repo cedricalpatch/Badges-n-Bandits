@@ -65,7 +65,7 @@ local function EnumerateEntities(initFunc, moveFunc, disposeFunc)
     local enum = {handle = iter, destructor = disposeFunc}
     setmetatable(enum, entityEnumerator)
 
-    local next = true
+    --local next = true
     repeat
       coroutine.yield(id)
       next, id = moveFunc(iter)
@@ -107,7 +107,7 @@ end
 function EnumeratePickups()
   return EnumerateEntities(FindFirstPickup, FindNextPickup, EndFindPickup)
 end
--------------------------------------------------	
+-------------------------------------------------
 
 --- EXPORT GetClosestPlayer()
 -- Finds the closest player
@@ -175,7 +175,7 @@ end
 -- Handles NUI functionality from JQuery/JS to Lua
 RegisterNUICallback("MainMenu", function(data, callback)
 
-  if data.action == "exit" then 
+  if data.action == "exit" then
     SendNUIMessage({hidemenu = true})
     SetNuiFocus(false, false)
 

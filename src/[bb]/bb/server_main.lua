@@ -12,12 +12,10 @@ local clInfo     = {}     -- Client Info ( see AssignInfo() )
 -- @param msg The message to print
 -- @param timestamp Boolean; If true, affixes timestamp
 function PrettyPrint(msg, timestamp)
-  local prefix = ""
+  local prefix = "^3[B&B]^7 "
   if timestamp then
     local dt = os.date("%m/%d/%Y %H:%M.%S", os.time())
     prefix = "^3[B&B "..dt.."]^7 "
-  else
-    prefix = "^3[B&B]^7 "
   end
   -- We need the final '^7' to ensure this doesn't paint the console
   -- after it has finished running.
@@ -53,7 +51,7 @@ function SavePlayerPos(cid, pos)
     if not pos then pos = positions[cid] end
 
     -- Only update if positions table has changed (is not nil)
-    if pos then 
+    if pos then
       exports['ghmattimysql']:execute(
         "UPDATE characters SET x = @x, y = @y, z = @z WHERE id = @cid",
         {
@@ -100,7 +98,7 @@ end)
 -- @param client The Player's Server ID
 -- @param id The player's Unique ID; If not nil, it will use this value
 function UniqueId(client, id)
-  if client then 
+  if client then
 
     -- If no meta, build meta. If uid exists in meta, return it
     if not clInfo[client] then clInfo[client] = {} end
@@ -136,7 +134,6 @@ end
 -- Allows the server to reobtain player information without redoing the query
 -- when a disconnected player rejoins shortly after disconnecting
 function RecentDisconnect(client, reason)
-	local client = source
   local cid = clInfo[client].charid
   Citizen.Wait(3000)
   PrettyPrint("Preserving character disconnect information.")
@@ -155,6 +152,14 @@ end
 -- @param client Server id of the player being assigned
 -- @param tbl The table of info to assign
 function AssignInfo(client, tbl, rejoin)
+  if not tbl then tbl = {} end
+  
+  -- If joining player recently dropped, reinstate their old stats info
+  for k,v in pairs (recentDrop) do 
+    if v.charid = tbl.cid then clInfo[client] = tbl end
+    return 0
+  end
+  
 	if client then
     -- If rejoining, then tbl is a copy of clInfo[client]
     if rejoin then clInfo[client] = tbl
