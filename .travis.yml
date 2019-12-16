@@ -1,23 +1,27 @@
+
 language: python
+
 sudo: false
 
 env:
-  - LUA="lua=5.3"
+  matrix:
+    - LUA="lua 5.3"
 
 before_install:
   - pip install hererocks
-  - hererocks lua_install -r^ --$LUA
-  - export PATH=$PATH:$PWD/lua_install/bin
-  
-install:
-  - luarocks install luacheck
-  - luarocks install busted
-  - luarocks install luacov
+  - hererocks here -r^ --$LUA # Install latest LuaRocks version
+                              # plus the Lua version for this build job
+                              # into 'here' subdirectory
+  - export PATH=$PATH:$PWD/here/bin # Add directory with all installed binaries to PATH
+  - eval `luarocks path --bin`
   - luarocks install luacov-coveralls
-  
+  - luarocks install busted
+
+install:
+  - luarocks make
+
 script:
-  - luacheck --std max+busted *.lua spec
-  - busted --verbose --coverage
+  - busted -c
 
 after_success:
-  - luacov-coveralls -e $TRAVIS_BUILD_DIR/lua_install
+  - luacov-coveralls -v
