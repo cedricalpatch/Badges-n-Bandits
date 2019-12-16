@@ -1,4 +1,3 @@
-# .travis.yaml
 language: python
 sudo: false
 
@@ -9,9 +8,10 @@ before_install:
   - pip install hererocks
   - hererocks lua_install -r^ --$LUA
   - export PATH=$PATH:$PWD/lua_install/bin
-  
+
 install:
-  - luarocks install busted
-  
+  - luarocks install luacheck
+
 script:
-  - busted --verbose
+  - luacheck -g -a --no-max-line-length --no-max-comment-line-length src/[bb]/bb
+  - luacheck -g -a --no-max-line-length --no-max-comment-line-length src/[bb]/bb_connect
