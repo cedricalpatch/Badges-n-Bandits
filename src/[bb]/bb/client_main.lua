@@ -1,18 +1,19 @@
 
 -- Badges & Bandits: Client Main Script (CLIENT MASTER)
-
+local zones = {} -- List of zone names
 
 -- Discord Rich Presence
 Citizen.CreateThread(function()
 	while true do
 		SetDiscordAppId(611712266164895744) -- Discord app id
-		SetDiscordRichPresenceAsset('SouthlandRP') -- Big picture asset name
-    SetDiscordRichPresenceAssetText('Southland Roleplay FiveM') -- Big picture hover text
-    SetDiscordRichPresenceAssetSmall('srp_logo') -- Small picture asset name
-    SetDiscordRichPresenceAssetSmallText('Southland Roleplay FiveM') -- Small picture hover text
-		Citizen.Wait(600000) --How often should this script check for updated assets? (in MS)
+		SetDiscordRichPresenceAsset('Badges & Bandits') -- Big picture asset name
+    SetDiscordRichPresenceAssetText('Badges & Bandits') -- Big picture hover text
+    SetDiscordRichPresenceAssetSmall('bb_logo') -- Small picture asset name
+    SetDiscordRichPresenceAssetSmallText('RedM: Badges & Bandits') -- Small picture hover text
+		Citizen.Wait(300000) -- Update every 5 minutes
 	end
 end)
+
 
 -- Format; To get local client's info, use index 'ServerId(PlayerId())'
 -- Access with given Accessors/Mutators
@@ -141,23 +142,15 @@ Citizen.CreateThread(function()
 end)
 
 
---- Event: bnb:playerinfo
+--- EVENT: bnb:playerinfo
 -- Sets plyInfo to the values passed by the server
 -- @param client the player server id of whose info client is receiving
 -- @param plInfo A table of client information (name, character id, etc)
 function PlayerInfo(client, plInfo)
 	plyInfo[client] = plInfo
 end
-RegisterNetEvent('bnb:playerinfo')
-AddEventHandler('bnb:playerinfo', PlayerInfo)
-
-
---- EXPORT GetMyInfo()
--- Called by other scripts to retrieve their character info from MySQL
--- @return Table of info from myInfo/clInfo
-function GetMyInfo()
-	return myInfo
-end
+RegisterNetEvent('bb:playerinfo')
+AddEventHandler('bb:playerinfo', PlayerInfo)
 
 
 --- EXPORT GetPlayerInfo()
