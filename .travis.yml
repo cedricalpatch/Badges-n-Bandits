@@ -16,7 +16,6 @@ before_install:
   - source .travis/setenv_lua.sh
 
 install:
-  - bash .travis/setup_beanstalkd.sh
   - luarocks install luasocket
   - luarocks install lsocket
   - luarocks install penlight
