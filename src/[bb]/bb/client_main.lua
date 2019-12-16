@@ -1,5 +1,8 @@
 
 -- Badges & Bandits: Client Main Script (CLIENT MASTER)
+RegisterNetEvent('bb:playerinfo')
+
+
 local zones = {} -- List of zone names
 
 -- Discord Rich Presence
@@ -14,6 +17,10 @@ Citizen.CreateThread(function()
 	end
 end)
 
+AddEventHandler('onClientMapStart', function()
+  exports.spawnmanager:setAutoSpawn(true)
+  exports.spawnmanager:forceRespawn()
+end)
 
 -- Format; To get local client's info, use index 'ServerId(PlayerId())'
 -- Access with given Accessors/Mutators
@@ -136,13 +143,13 @@ end
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
-		SetCanAttackFriendly(PlayerPedId(), true, false)
+		--SetCanAttackFriendly(PlayerPedId(), true, false)
 		NetworkSetFriendlyFireOption(true)
 	end
 end)
 
 
---- EVENT: bnb:playerinfo
+--- EVENT: bb:playerinfo
 -- Sets plyInfo to the values passed by the server
 -- @param client the player server id of whose info client is receiving
 -- @param plInfo A table of client information (name, character id, etc)

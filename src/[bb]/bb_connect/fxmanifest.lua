@@ -18,29 +18,10 @@ game "rdr3"
 
 dependency 'bb'
 ui_page "nui/ui.html"
-files {
-  "nui/discord.jpg",
-	"nui/ui.html",
-	"nui/ui.js", 
-	"nui/ui.css"
-}
-
-
-client_scripts {
-  "cl_config.lua", 
-  "cl_connect.lua"
-}
-
-
-server_scripts {
-  "sv_config.lua", 
-  "sv_connect.lua"
-}
-
-
-server_exports {
-}
-
+files {"nui/discord.jpg","nui/ui.html","nui/ui.js","nui/ui.css"}
+client_scripts {"cl_config.lua", "cl_connect.lua"}
+server_scripts {"sv_config.lua", "sv_connect.lua"}
+server_exports {}
 
 exports {
   'IsMainMenuOpen', -- Returns true if the MOTD/News window is open

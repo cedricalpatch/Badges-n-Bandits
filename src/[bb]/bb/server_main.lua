@@ -1,5 +1,7 @@
 
 RegisterServerEvent('bb:save_pos')
+RegisterServerEvent('bb:assigncharinfo')
+RegisterServerEvent('bb:unload')
 
 
 local recentDrop = {}     -- Preserves clInfo when player disconnects
@@ -182,7 +184,7 @@ function AssignClientInfo(client, tbl)
     
 	end
 end
-AddEventHandler('bb:srp_assigncharinfo', AssignClientInfo)
+AddEventHandler('bb:assigncharinfo', AssignClientInfo)
 
 
 --- 'bb:unload'

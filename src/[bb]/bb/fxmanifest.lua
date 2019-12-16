@@ -18,7 +18,7 @@ game "rdr3"
 resource_type 'gametype' { name = 'Badges & Bandits'}
 
 client_script "client_main.lua"
-server_script "server_man.lua"
+server_script "server_main.lua"
 
 ui_page "nui/ui.html"
 

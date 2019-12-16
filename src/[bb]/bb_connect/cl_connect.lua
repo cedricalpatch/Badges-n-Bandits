@@ -1,6 +1,7 @@
 
 -- Badges & Bandits: Connection Script (CLIENT)
-
+RegisterNetEvent('bb:create_ready')
+local connected = false
 
 -- NUI: Connect
 -- Handles NUI functionality from JQuery/JS to Lua
@@ -31,6 +32,7 @@ AddEventHandler('onClientResourceStart', function(resname)
     print("DEBUG - Requesting for the server to let me spawn.")
     
     Citizen.CreateThread(function()
+      -- Keep probing the server until we're loaded
       while not connected do 
         TriggerServerEvent('bb:create_player')
         Citizen.Wait(3000)
@@ -39,3 +41,9 @@ AddEventHandler('onClientResourceStart', function(resname)
     end)
   end
 end)
+
+
+AddEventHandler('bb:create_ready', function()
+  connected = true
+end)
+

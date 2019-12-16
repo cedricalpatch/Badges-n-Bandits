@@ -1,6 +1,8 @@
 
 -- Badges & Bandits: Connection Script (SERVER)
-local cprint = function(msg) exports['bb']:ConsolePrint(msg) end
+RegisterServerEvent('bb:create_player')
+
+local cprint = function(msg) exports['bb']:PrettyPrint(msg) end
 
 
 --- GetPlayerInformation()
@@ -56,16 +58,15 @@ function CreateUniqueId(ply)
     }
   )
   if uid > 0 then 
-    unique[ply] = uid
     exports['bb']:UniqueId(ply, tonumber(uid)) -- Set UID for session
     cprint("Created ("..(uid)..") created for  "..GetPlayerName(ply))
   else
     cprint("^1A Fatal Error has occurred, and the player has been dropped.")
-    print("5M:CNR was unable to obtain a Unique ID for "..GetPlayerName(ply))
+    print("5M:BNB was unable to obtain a Unique ID for "..GetPlayerName(ply))
     print("The player is not using any valid methods of identification.")
     DropPlayer(ply, "Steam, Social Club, RedM, or a Discord License is required on this server for stats tracking.")
   end
-  return unique[ply]
+  return exports['bb']:UniqueId(ply)
 end
 
 
@@ -76,17 +77,17 @@ function CreateSession(ply)
   
   -- Retrieve all their character information
   exports['ghmattimysql']:execute(
-    "SELECT * FROM characters WHERE idUnique = @uid",
-    {['uid'] = unique[ply]},
+    "SELECT * FROM characters WHERE id = @uid",
+    {['uid'] = exports['bb']:UniqueId(ply)},
     function(plyr)
 
       -- If character exists, load it.
       if plyr[1] then
         local pName = GetPlayerName(ply).."'s"
         cprint("Reloading "..pName.." last known character information.")
-        exports['cnr_chat']:DiscordMessage(
+        --[[exports['bb_chat']:DiscordMessage(
           65280, GetPlayerName(ply).." has joined the game!", "", ""
-        )
+        )]]
         TriggerClientEvent('bb:create_reload', ply, plyr[1])
       
       -- Otherwise, create it.
@@ -94,7 +95,7 @@ function CreateSession(ply)
         Citizen.Wait(1000)
         cprint("Sending "..GetPlayerName(ply).." to Character Creator.")
         Citizen.CreateThread(function()
-          --exports['cnr_chat']:DiscordMessage(
+          --exports['bb_chat']:DiscordMessage(
           --  7864575, "New Player",
           --  "**Please welcome our newest player, "..GetPlayerName(ply).."!**", ""
           --)
@@ -126,16 +127,14 @@ AddEventHandler('bb:create_player', function()
   
     -- SQL: Retrieve character information
     exports['ghmattimysql']:scalar(
-      "SELECT idUnique FROM players "..
-      "WHERE idSteam = @steam OR idFiveM = @five OR idSocialClub = @soc "..
-      "OR idDiscord = @disc LIMIT 1",
-      {['steam'] = ids['stm'], ['five'] = ids['five'], ['soc'] = ids['soc'], ['disc'] = ids['discd']},
+      "SELECT id FROM players "..
+      "WHERE steam_id = @steam OR redm_id = @red OR club_id = @soc "..
+      "OR discord_id = @disc LIMIT 1",
+      {['steam'] = ids['stm'], ['red'] = ids['red'], ['soc'] = ids['soc'], ['disc'] = ids['discd']},
       function(uid)
         if uid then 
-          print("DEBUG - UID Exists.")
-          unique[ply] = uid
           cprint("Found Unique ID "..uid.." for "..ustring)
-          exports['cnrobbers']:UniqueId(ply, uid)
+          exports['bb']:UniqueId(ply, uid)
         else
           print("DEBUG - UID Nonexistant")
           local uid = CreateUniqueId(ply)
