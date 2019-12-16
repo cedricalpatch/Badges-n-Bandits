@@ -59,14 +59,14 @@ function CreateUniqueId(client)
   )
   if uid > 0 then 
     exports['bb']:UniqueId(client, tonumber(uid)) -- Set UID for session
-    pprint("Created ("..(uid)..") created for  "..GetPlayerName(client))
+    pprint("Unique ID ("..(uid)..") created for  "..GetPlayerName(client))
   else
     pprint("^1A Fatal Error has occurred, and the player has been dropped.")
     print("5M:BNB was unable to obtain a Unique ID for "..GetPlayerName(client))
     print("The player is not using any valid methods of identification.")
     DropPlayer(client, "Steam, Social Club, RedM, or a Discord License is required on this server for stats tracking.")
   end
-  return exports['bb']:UniqueId(client)
+  return uid
 end
 
 

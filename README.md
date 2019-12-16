@@ -17,9 +17,10 @@ These are very basic instructions to get most people up and running. Your setup 
 3) Move the `bb.cfg` file in the `[bb]` folder to your server's `server.cfg` location
 4) Add `exec bb.cfg` to your `server.cfg` file
 5) Create an SQL database
-6) Download MySQL-Async
+6) Download and install GHMattiMySQL
+6b) Change GHMattiMySQL's `__resource.lua` filename to `fxmanifest.lua`
 7) Update MySQL-Async with your database details
-8) Import the `bbgame.sql` file from this repository
+8) Import the `database_v#.sql` file from this repository
 9) Start the Server
 
 You will need to install an SQL middleware such as MySQL-Async
