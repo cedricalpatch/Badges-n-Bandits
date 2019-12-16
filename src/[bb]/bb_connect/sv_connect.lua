@@ -16,7 +16,7 @@ function GetPlayerInformation(client)
     ['ip'] = GetPlayerEndpoint(client)
   }
 
-  for _,id in pairs (clientInfo) do 
+  for _,id in pairs (clientInfo) do
     if string.sub(id, 1, string.len("steam:")) == "steam:" then
       infoTable['stm'] = id
     elseif string.sub(id, 1, string.len("license:")) == "license:" then
@@ -28,20 +28,19 @@ function GetPlayerInformation(client)
     end
   end
 
-  local filtered = GetPlayerName(client)
-  infoTable['user'] = string.gsub(GetPlayerName(client), "[%W]", "")
+  local filterMe = GetPlayerName(client)
+  infoTable['user'] = string.gsub(filterMe, "[%W]", "")
   print("DEBUG - User Values:\n"..json.encode(infoTable))
   return infoTable
 end
 
 --- CreateUniqueId()
--- Creates a new entry to the 'players' table of the SQL Database, and then 
--- assigns the Unique ID to the 'unique' table variable.
+-- Attempted to find a Unique ID. If unable to, it will create one.
 -- @param client The Player's Server ID.
--- @return nil if invalid, 0 if not found.
+-- @return nil if invalid, or unique ID (unsigned) if found
 function CreateUniqueId(client)
 
-  if not client then return 0 end
+  if not client then return nil end
 
   -- Filter username for special characters
 
@@ -55,8 +54,7 @@ function CreateUniqueId(client)
       ['disc'] = ids['discd'], ['ip'] = ids['ip'], ['user'] = ids['user']
     }
   )
-  if uid > 0 then 
-    exports['bb']:UniqueId(client, tonumber(uid)) -- Set UID for session
+  if uid > 0 then
     pprint("Unique ID ("..(uid)..") created for  "..GetPlayerName(client))
   else
     pprint("^1A Fatal Error has occurred, and the player has been dropped.")
@@ -120,34 +118,13 @@ AddEventHandler('bb:create_player', function()
     end
 
     -- SQL: Retrieve character information
-    exports['ghmattimysql']:scalar(
-      "SELECT id FROM players "..
-      "WHERE steam_id = @steam OR redm_id = @red OR club_id = @soc "..
-      "OR discord_id = @disc LIMIT 1",
-      {['steam'] = ids['stm'], ['red'] = ids['red'], ['soc'] = ids['soc'], ['disc'] = ids['discd']},
-      function(uid)
-        if uid then 
-          pprint("Found Unique ID "..uid.." for "..ustring)
-          exports['bb']:UniqueId(client, uid)
-        else
-          print("DEBUG - UID Nonexistant")
-          local uid = CreateUniqueId(client)
-          if uid < 1 then 
-            pprint("^1A Fatal Error has Occurred.")
-            pprint("No player ID given to CreateUniqueId() in sv_create.lua")
-          else
-            pprint(
-              "Successfully created UID ("..tostring(uid)..
-              ") for player "..GetPlayerName(client)
-            )
-          end
-        end
-        Citizen.Wait(200) 
-        pprint(ustring.." is loaded in, and ready to play!")
-        TriggerClientEvent('bb:create_ready', client)
-        CreateSession(client)
-      end
-    )
+    local uid = CreateUniqueId(client)
+    if uid then
+      pprint("Found Unique ID "..uid.." for "..ustring)
+      exports['bb']:UniqueId(client, uid)
+      CreateSession(client)
+      TriggerClientEvent('bb:create_ready', client)
+    end
 
   else
     pprint("^1"..ustring.." disconnected. ^7(No ID Validation Obtained)")

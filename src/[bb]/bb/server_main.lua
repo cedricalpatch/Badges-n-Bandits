@@ -156,7 +156,7 @@ function AssignInfo(client, tbl, rejoin)
   
   -- If joining player recently dropped, reinstate their old stats info
   for k,v in pairs (recentDrop) do 
-    if v.charid = tbl.cid then clInfo[client] = tbl end
+    if v.charid == tbl.cid then clInfo[client] = tbl end
     return 0
   end
   

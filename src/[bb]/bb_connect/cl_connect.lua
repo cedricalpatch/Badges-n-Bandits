@@ -7,7 +7,7 @@ local connected = false
 -- Handles NUI functionality from JQuery/JS to Lua
 RegisterNUICallback("ConnectMenu", function(data, callback)
 
-  if data.action == "exit" then 
+  if data.action == "exit" then
     SendNUIMessage({hidemenu = true})
     SetNuiFocus(false, false)
 
@@ -22,7 +22,7 @@ RegisterCommand('relog', function()
 end)
 
 -- On connection to the server
---AddEventHandler('onClientGameTypeStart', function()   
+--AddEventHandler('onClientGameTypeStart', function()
 AddEventHandler('onClientResourceStart', function(resname)
   if GetCurrentResourceName() == resname then
 
@@ -32,7 +32,7 @@ AddEventHandler('onClientResourceStart', function(resname)
 
     Citizen.CreateThread(function()
       -- Keep probing the server until we're loaded
-      while not connected do 
+      while not connected do
         TriggerServerEvent('bb:create_player')
         Citizen.Wait(3000)
       end
