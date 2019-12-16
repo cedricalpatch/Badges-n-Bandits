@@ -1,5 +1,4 @@
 # Badges n' Bandits (BNB)
-
 ### Introduction
 A Cops and Robbers Gamemode for [RedM](https://redm.gg/)
 
@@ -30,12 +29,12 @@ Requests with conflicts will not be accepted.
 [RhapidFyre](https://github.com/rhapidfyre)
 
 ### Project Collaborators
-Peron(s) who manage(s) the Github Repo & Change the Gamemode Version
+Manages the Github Repo/Gamemode Version
 
 ### Contributors
-Peron(s) who contributed at least once to the release version of the gamemode
+Contributed at least once
 
 
 
-## License
+# License
 This gamemode is unlicensed. Anyone may use, distribute, edit, or otherwise alter these files at any time, or use them for personal development/education.
