@@ -1,9 +1,6 @@
 
---[[--------------------------------
-	Southland Client Master File
-	Created by RhapidFyre
---------------------------------]]--
-local plyCount = 255
+-- Badges & Bandits: Client Main Script (CLIENT MASTER)
+
 
 -- Discord Rich Presence
 Citizen.CreateThread(function()
@@ -170,4 +167,17 @@ end
 function GetPlayerInfo(iPly)
 	return plyInfo[iPly]
 end
+
+
+-- NUI: MainMenu
+-- Handles NUI functionality from JQuery/JS to Lua
+RegisterNUICallback("MainMenu", function(data, callback)
+
+  if data.action == "exit" then 
+    SendNUIMessage({hidemenu = true})
+    SetNuiFocus(false, false)
+  
+  end
+
+end)
 

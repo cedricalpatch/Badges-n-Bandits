@@ -1,4 +1,16 @@
 
+--[[
+  Badges n' Bandits
+  A Cops and Robbers Gamemode for RedM
+  
+  Contributors:
+  - RhapidFyre
+  
+  This is the master resource for the BB gamemode for RedM. This file will hold
+  all of the information for running the gamemode that should be accessible
+  from other scripts. Such as the player's stats, last known location, etc
+]]
+
 fx_version "adamant"
 rdr3_warning 'I acknowledge that this is a prerelease build of RedM, and I am aware my resources *will* become incompatible once RedM ships.'
 game "rdr3"

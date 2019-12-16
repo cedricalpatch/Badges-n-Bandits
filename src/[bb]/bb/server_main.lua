@@ -1,18 +1,5 @@
 
---[[--------------------------------
-	Southland Server Master File
-	Created by RhapidFyre
---------------------------------]]--
 
-RegisterServerEvent("setmapname")
-AddEventHandler("setmapname", function()
-  SetMapName("Southland")
-end)
-
-local clInfo       = {}
-local recentDrop   = {}
-local adminName    = {}
-local useAdminName = {}
 local useDiscord   = true
 
 
@@ -24,9 +11,9 @@ function PrettyPrint(msg, timestamp)
   local prefix = ""
   if timestamp then
     local dt = os.date("%m/%d/%Y %H:%M.%S", os.time())
-    prefix = "^3["..dt.."]^7 "
+    prefix = "^3[BB GAME "..dt.."]^7 "
   else
-    prefix = "^3[SRP CONSOLE]^7 "
+    prefix = "^3[BB GAME]^7 "
   end
   print(prefix..msg.."^7")
 end

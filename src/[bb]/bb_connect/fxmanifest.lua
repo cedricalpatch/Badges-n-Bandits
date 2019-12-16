@@ -1,7 +1,6 @@
 
 --[[
-  Badges n' Bandits
-  A Cops and Robbers Gamemode for RedM
+  Badges n' Bandits: Connection Scripts
   
   Contributors:
   - RhapidFyre
