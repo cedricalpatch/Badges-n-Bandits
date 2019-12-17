@@ -52,7 +52,7 @@ function SavePlayerPos(cid, pos)
 
     -- Only update if positions table has changed (is not nil)
     if pos then
-      exports['ghmattimysql']:execute(
+      exports.ghmattimysql:execute(
         "UPDATE characters SET x = @x, y = @y, z = @z WHERE id = @cid",
         {
           ['x']   = (math.floor(pos.x * 100))/100, -- Ensures 2 decimal places
@@ -94,22 +94,13 @@ end)
 
 --]]---------------------------------------------------------------------------
 
---- LOCAL AssignUniqueId()
--- Retrieves the Unique ID for given player when Lua can't figure it out
--- @param client The Player's Server ID
-local function AssignUniqueId(client)
-  local uid = 0
-  
-  -- DEBUG - Do SQL Stuff
-  
-  
-  return uid
-end
-
 --- EXPORT: UniqueId()
 -- Retrieves the user's Unique ID, or, if given an id, will assign it
+-- If a player connects with no identification methods, the 'sv_connect' script
+-- will drop them, so we can safely assume 'clInfo[id].unique' exists.
 -- @param client The Player's Server ID
--- @param id The player's Unique ID; If not nil, it will use this value
+-- @param id The player's Unique ID
+-- @return Client's Unique ID. Returns 0 if no client ID was passed
 function UniqueId(client, id)
   if client then
 
@@ -120,12 +111,6 @@ function UniqueId(client, id)
       clInfo[client].unique = id
       print("DEBUG - Assigned uid "..id.." to Player #"..client)
       return id
-
-    else
-      if not clInfo[client].unique then
-        print("DEBUG - Checking SQL for Unique ID.")
-        clInfo[client].unique = AssignUniqueId(client)
-      end
     end
 
     return clInfo[client].unique
@@ -141,10 +126,10 @@ end
 function GetCharacterId(client)
 
   local cid = 0
-  
+
   -- Retrieve CID from clInfo table
   if clInfo[client] then cid = clInfo[client].charid end
-  
+
   -- If not available, check SQL
   if not cid then
     cid = exports.ghmattimysql:scalarSync(
@@ -153,7 +138,7 @@ function GetCharacterId(client)
       {['uid'] = UniqueId(client)}
     )
   end
-  
+
   if not cid then cid = 0 end
   return cid
 end
@@ -257,7 +242,7 @@ function AssignInfo(client, tbl, rejoin)
       else                clInfo[client].charid = tbl.cid
       end
       PrettyPrint("CID #"..tostring(clInfo[client].charid).." assigned to Player #"..client)
-    
+
     end
     TriggerClientEvent('bb:playerinfo', (-1), client, clInfo[client])
 

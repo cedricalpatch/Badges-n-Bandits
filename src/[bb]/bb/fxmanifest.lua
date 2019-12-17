@@ -29,13 +29,16 @@ file {
 }
 
 server_exports {
-  'UniqueId',    -- The UniqueID of the Player
-  'PrettyPrint', -- A nicely formatted print message
-  'AssignInfo',  -- Assigns character values rx'd from SQL
-  'Bounty',
-  'GetCharacterId',
+  'UniqueId',        -- The Database ID of the Player's Account
+  'PrettyPrint',     -- A nicely formatted print message
+  'AssignInfo',      -- Assigns character values rx'd from SQL
+  'GetBounty',       -- Gets the bounty level for Server Id (arg)
+  'SetBounty',       -- Adjusts the bounty level for (server_id, adjust)
+  'GetCharacterId',  -- Returns the Database ID number of the active character
 }
 
 exports {
-  'UniqueId', -- The UID of the server ID given//Local player if nil
+  'UniqueId',         -- The Database ID of the local client
+  'GetCharacterId',   -- The Database ID of the active character
+  'GetBounty',        -- Gets the bounty level for Server Id (arg)
 }
