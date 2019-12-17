@@ -31,7 +31,7 @@ These are very basic instructions to get most people up and running. Your setup 
 >8) Import the `database_v#.sql` file from this repository
 >9) Start the Server
 
-You will need to install an SQL middleware such as MySQL-Async
+You will need to install [GHMattiMySQL](https://github.com/GHMatti/ghmattimysql).
 
 # Development Instructions
 
