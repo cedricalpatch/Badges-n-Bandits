@@ -94,7 +94,9 @@ function CreateSession(client)
           ) ]]
         end)
       end
-      TriggerClientEvent('bb:connect_ack', client, charInfo[1])
+      -- Generate a creation hash for authorization
+      local charHash = ApprovalHash(client)
+      TriggerClientEvent('bb:connect_ack', client, charHash, charInfo[1])
     end
   )
 
@@ -102,7 +104,7 @@ end
 
 --- EVENT 'bb:create_player'
 -- Received by a client when they're spawned and ready to click play
-AddEventHandler('bb:create_player', function()
+AddEventHandler('bb:create_player', function(isRelog)
 
   local client     = source
   local ids     = GetPlayerInformation(client)
@@ -116,14 +118,25 @@ AddEventHandler('bb:create_player', function()
     if dMsg then
       pprint("Steam ID or FiveM License exists. Retrieving Unique ID.")
     end
+    
+    -- If the player is freshly joining the server, reload last character
+    if not isRelog then
 
-    -- SQL: Retrieve character information
-    local uid = CreateUniqueId(client)
-    if uid then
-      pprint("Found Unique ID "..uid.." for "..ustring)
-      exports['bb']:UniqueId(client, uid)
-      CreateSession(client)
-      TriggerClientEvent('bb:create_ready', client)
+      -- SQL: Retrieve character information
+      local uid = CreateUniqueId(client)
+      if uid then
+        pprint("Found Unique ID "..uid.." for "..ustring)
+        exports['bb']:UniqueId(client, uid)
+        CreateSession(client)
+        TriggerClientEvent('bb:create_ready', client)
+        
+      end
+      
+    -- If the player is using /relog, display menu and character list
+    else
+    
+      -- DEBUG - NOT IMPLEMENTED
+    
     end
 
   else

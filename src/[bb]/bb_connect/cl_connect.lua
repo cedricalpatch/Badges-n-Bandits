@@ -41,13 +41,13 @@ AddEventHandler('onClientResourceStart', function(resname)
   end
 end)
 
-AddEventHandler('bb:connect_ack', function(charInfo)
+AddEventHandler('bb:connect_ack', function(charHash, charInfo)
   connected = true
   if charInfo then
     print("DEBUG - Reloading last played character.")
     ReloadCharacter(charInfo)
   else
     print("DEBUG - Going to character creator.")
-    CreateCharacter()
+    CreateCharacter(charHash)
   end
 end)

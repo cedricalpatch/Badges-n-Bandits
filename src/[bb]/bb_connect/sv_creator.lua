@@ -1,10 +1,29 @@
 
 -- Badges & Bandits: Character Creator Script (SERVER)
-RegisterServerEvent('bb:client_new_spawn')
-RegisterServerEvent('bb:client_ready')
+RegisterServerEvent('bb:client_loaded')
+
+local hashes = {}
+
+--- ApprovalHash()
+-- Creates a hash when called for the given player.
+-- This hash ensures that the clients aren't sending us character creation
+-- information outside of the parameters that we've allowed.
+-- @return hash The player's hash
+function ApprovalHash(client)
+  local chars = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+                "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+                "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+                "U", "V", "W", "X", "Y", "Z"};
+  local temp = ""
+  for i=1, 16, do
+    local idx = math.random(#chars); temp = temp..chars[idx]
+  end
+  hashes[client] = temp
+  return temp
+end
 
 -- RX'd when a client creates a new character
-AddEventHandler('bb:client_new_spawn', function(modelChoice)
+AddEventHandler('bb:client_loaded', function(modelChoice)
   
   local client = source
   local uid = exports.bb:UniqueId(client)
@@ -18,9 +37,10 @@ AddEventHandler('bb:client_new_spawn', function(modelChoice)
     {['pid'] = uid, ['mdl'] = modelChoice}
   )
   
-end)
-
--- RX'd when a client reloads a previous character
-AddEventHandler('bb:client_request'. function()
-  print("DEBUG - Player spawned with an old character!")
+  -- Tells the client and the server scripts that the player
+  -- is loaded and ready to execute relevant scripts 
+  TriggerEvent('bb:player_ready', client, uid, cid)
+  TriggerClientEvent('bb:player_ready', client, uid, cid)
+  
+  
 end)
