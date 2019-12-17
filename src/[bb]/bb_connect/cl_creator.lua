@@ -12,10 +12,10 @@ function CreateCharacter()
     model = 'mp_male'
   }, function()
     print("DEBUG - Player spawned as a new character!")
-    --exports['bb']:ReportPosition(true)
-    --SetPedDefaultComponentVariation(PlayerPedId())
-    --TriggerEvent('bb:client_new_spawn')
-    --TriggerServerEvent('bb:client_new_spawn')
+    exports['bb']:ReportPosition(true)
+    SetPedDefaultComponentVariation(PlayerPedId())
+    TriggerEvent('bb:client_new_spawn')
+    TriggerServerEvent('bb:client_new_spawn')
   end)
 end
 
@@ -32,8 +32,8 @@ function ReloadCharacter(charInfo)
     model = 'mp_male'
   }, function()
     print("DEBUG - Player spawned with their last played character!")
-    --exports['bb']:ReportPosition(true)
-    --TriggerEvent('bb:client_new_spawn')
-    --TriggerServerEvent('bb:client_new_spawn')
+    exports['bb']:ReportPosition(true)
+    TriggerEvent('bb:client_request')
+    TriggerServerEvent('bb:client_request')
   end)
 end

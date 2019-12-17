@@ -1,6 +1,7 @@
 
 -- Badges & Bandits: Client Main Script (CLIENT MASTER)
 RegisterNetEvent('bb:playerinfo')
+RegisterNetEvent('bb:bounty')
 
 local zones = {} -- List of zone names
 local tracker = false -- Start tracking information (miles, position, etc)

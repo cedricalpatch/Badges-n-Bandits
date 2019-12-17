@@ -1,4 +1,5 @@
 
+RegisterServerEvent('bb:client_ready')
 RegisterServerEvent('bb:save_pos')
 RegisterServerEvent('bb:unload')
 
@@ -74,6 +75,7 @@ AddEventHandler('playerDropped', function(reason)
   local client     = source
   local cid        = clInfo[client].charid
   local clientInfo = GetPlayerName(client)
+  StoreBounty(client, clInfo[client].bounty)
   if cid then SavePlayerPos(cid, positions[cid]) end
     PrettyPrint(
       "^1"..tostring(clientInfo).." disconnected. ^7("..tostring(reason)..")"
@@ -91,6 +93,18 @@ end)
   ~ END OF POSITION ACQUISITION SCRIPTS
 
 --]]---------------------------------------------------------------------------
+
+--- LOCAL AssignUniqueId()
+-- Retrieves the Unique ID for given player when Lua can't figure it out
+-- @param client The Player's Server ID
+local function AssignUniqueId(client)
+  local uid = 0
+  
+  -- DEBUG - Do SQL Stuff
+  
+  
+  return uid
+end
 
 --- EXPORT: UniqueId()
 -- Retrieves the user's Unique ID, or, if given an id, will assign it
@@ -118,6 +132,77 @@ function UniqueId(client, id)
   end
   PrettyPrint("No player ID given to UniqueId() from "..GetInvokingResource())
   return nil -- If player ID not given return nil
+end
+
+--- EXPORT GetCharacterId()
+-- Retrieve's the active character ID for given Server ID
+-- @param client The player's Server ID
+-- @return The character ID number, or 0 if failed
+function GetCharacterId(client)
+
+  local cid = 0
+  
+  -- Retrieve CID from clInfo table
+  if clInfo[client] then cid = clInfo[client].charid end
+  
+  -- If not available, check SQL
+  if not cid then
+    cid = exports.ghmattimysql:scalarSync(
+      "SELECT id FROM characters WHERE player_id = @uid "..
+      "ORDER BY lastplay DESC LIMIT 1",
+      {['uid'] = UniqueId(client)}
+    )
+  end
+  
+  if not cid then cid = 0 end
+  return cid
+end
+
+--- EXPORT SetBounty()
+-- Adjusts the player's bounty
+-- @param client Server ID
+-- @param adj Adjusts the client's bounty; Negative lowers the bounty
+-- @return The new bounty level
+function SetBounty(client, adj)
+  if not client then return 0 end
+  if not adj    then adj = 0  end
+  clInfo[client].bounty = clInfo[client].bounty + adj
+  return (clInfo[client].bounty)
+end
+
+--- EXPORT GetBounty()
+-- Gets the player's bounty
+-- @param client Server ID
+-- @return The bounty level
+function GetBounty(client)
+  if not client then return 0 end
+  return (clInfo[client].bounty)
+end
+
+--- StoreBounty()
+-- When a player disconnects, this is called to store their bounty into SQL
+-- @param client The Server ID
+function StoreBounty(client)
+  local cid = GetCharacterId(client)
+  exports.ghmattimysql:execute(
+    "UPDATE characters SET bounty = @value WHERE id = @char",
+    {['value'] = clInfo[client].bounty, ['char'] = cid}
+  )
+end
+
+--- RetrieveBounty()
+-- When a player disconnects, this is called to store their bounty into SQL
+-- @param client The Server ID
+function RetrieveBounty(client)
+  local cid = GetCharacterId(client)
+  exports.ghmattimysql:scalar(
+    "SELECT bounty FROM characters WHERE id = @char",
+    {['value'] = clInfo[client].bounty, ['char'] = cid},
+    function(bty)
+      clInfo[client].bounty = bty
+      TriggerClientEvent('bb:bounty', client, bty)
+    end
+  )
 end
 
 --- ClearCharInfo()
@@ -172,6 +257,7 @@ function AssignInfo(client, tbl, rejoin)
       else                clInfo[client].charid = tbl.cid
       end
       PrettyPrint("CID #"..tostring(clInfo[client].charid).." assigned to Player #"..client)
+    
     end
     TriggerClientEvent('bb:playerinfo', (-1), client, clInfo[client])
 
@@ -182,4 +268,10 @@ end
 -- Received when a player is changing characters
 AddEventHandler('bb:unload', function()
   ClearCharInfo(source)
+end)
+
+--- 'bb:client_ready'
+-- When a player has loaded in, restore their bounty level
+AddEventHandler('bb:client_ready', function()
+  RetrieveBounty(source)
 end)
