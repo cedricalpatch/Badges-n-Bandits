@@ -35,11 +35,11 @@ server_exports {
   'AssignInfo',      -- Assigns character values rx'd from SQL
   'GetBounty',       -- Gets the bounty level for Server Id (arg)
   'SetBounty',       -- Adjusts the bounty level for (server_id, adjust)
-  'GetCharacterId',  -- Returns the Database ID number of the active character
+  'CharacterId',  -- Returns the Database ID number of the active character
 }
 
 exports {
   'UniqueId',         -- The Database ID of the local client
-  'GetCharacterId',   -- The Database ID of the active character
+  'CharacterId',   -- The Database ID of the active character
   'GetBounty',        -- Gets the bounty level for Server Id (arg)
 }

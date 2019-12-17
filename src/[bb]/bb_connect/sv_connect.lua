@@ -70,9 +70,10 @@ end
 -- @param client The Player's Server ID
 function CreateSession(client)
 
-  -- Retrieve all their character information
+  -- Retrieve last played character's information
   exports['ghmattimysql']:execute(
-    "SELECT * FROM characters WHERE id = @uid",
+    "SELECT * FROM characters WHERE player_id = @uid"..
+    "ORDER BY lastplayed DESC LIMIT 1",
     {['uid'] = exports['bb']:UniqueId(client)},
     function(charInfo)
 
@@ -83,7 +84,7 @@ function CreateSession(client)
         --[[ exports['bb_chat']:DiscordMessage(
           65280, GetPlayerName(client).." has joined the game!", "", ""
         ) ]]
-
+        exports.bb:CharacterId(client, charInfo[1]['id'])
       else
         Citizen.Wait(1000)
         pprint("No characters found for "..GetPlayerName(client)..".")
@@ -93,10 +94,13 @@ function CreateSession(client)
             "**Please welcome our newest player, "..GetPlayerName(client).."!**", ""
           ) ]]
         end)
+
       end
+
       -- Generate a creation hash for authorization
       local charHash = ApprovalHash(client)
       TriggerClientEvent('bb:connect_ack', client, charHash, charInfo[1])
+
     end
   )
 
@@ -118,7 +122,7 @@ AddEventHandler('bb:create_player', function(isRelog)
     if dMsg then
       pprint("Steam ID or FiveM License exists. Retrieving Unique ID.")
     end
-    
+
     -- If the player is freshly joining the server, reload last character
     if not isRelog then
 
@@ -129,14 +133,14 @@ AddEventHandler('bb:create_player', function(isRelog)
         exports['bb']:UniqueId(client, uid)
         CreateSession(client)
         TriggerClientEvent('bb:create_ready', client)
-        
+
       end
-      
+
     -- If the player is using /relog, display menu and character list
     else
-    
+
       -- DEBUG - NOT IMPLEMENTED
-    
+
     end
 
   else

@@ -119,11 +119,13 @@ function UniqueId(client, id)
   return nil -- If player ID not given return nil
 end
 
---- EXPORT GetCharacterId()
+
+
+--- EXPORT CharacterId()
 -- Retrieve's the active character ID for given Server ID
 -- @param client The player's Server ID
 -- @return The character ID number, or 0 if failed
-function GetCharacterId(client)
+function CharacterId(client)
 
   local cid = 0
 
@@ -168,7 +170,7 @@ end
 -- When a player disconnects, this is called to store their bounty into SQL
 -- @param client The Server ID
 function StoreBounty(client)
-  local cid = GetCharacterId(client)
+  local cid = CharacterId(client)
   exports.ghmattimysql:execute(
     "UPDATE characters SET bounty = @value WHERE id = @char",
     {['value'] = clInfo[client].bounty, ['char'] = cid}
@@ -179,7 +181,7 @@ end
 -- When a player disconnects, this is called to store their bounty into SQL
 -- @param client The Server ID
 function RetrieveBounty(client)
-  local cid = GetCharacterId(client)
+  local cid = CharacterId(client)
   exports.ghmattimysql:scalar(
     "SELECT bounty FROM characters WHERE id = @char",
     {['value'] = clInfo[client].bounty, ['char'] = cid},

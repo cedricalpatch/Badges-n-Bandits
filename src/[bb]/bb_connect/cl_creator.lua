@@ -3,16 +3,17 @@
 RegisterNetEvent('bb:character_approval')
 local myHash = nil
 
---- CharacterApproved()
+--- LOCAL CharacterApproved()
 -- RX'd when the server approves of the character client created
-function CharacterApproved()
+-- Localized to ensure no other scripts can call this
+local function CharacterApproved(charInfo)
 
   -- DEBUG - This is only temporary, to get people into the game
   exports.spawnmanager:spawnPlayer({
-    x = -262.85,
-    y = 793.41,
-    z = 118.09,
-    model = 'mp_male'
+    x     = -262.85,
+    y     = 793.41,
+    z     = 118.09,
+    model = charInfo.model
   }, function()
     print("DEBUG - Player spawned as a new character!")
     exports['bb']:ReportPosition(true)
@@ -20,20 +21,23 @@ function CharacterApproved()
     TriggerEvent('bb:client_loaded', true)
     TriggerServerEvent('bb:client_loaded', true)
   end)
-  
+
 end
 
 AddEventHandler('bb:character_approval', function(passed, reason)
   if not passed then
     TriggerEvent('chat:addMessage', {multiline = true, args = {
-      "REJECTED", "Character Creation was not approved.\n"..
+      "^1REJECTED", "Character Creation was not approved.\n"..
       "Reason: "..reason
     }})
-    
+
   else
-    -- If passed, reason will be the same table of char info we sent
+    TriggerEvent('chat:addMessage', {multiline = true, args = {
+      "^2APPROVED", "Your character, as designed, has been approved!"
+    }})
+    -- If passed, `reason` will be the same table of char info we sent
     CharacterApproved(reason)
-    
+
   end
 end)
 
@@ -43,18 +47,17 @@ end)
 function SubmitCharacter(cInfo)
   if not cInfo then cInfo = {model = 'mp_male'} end
   TriggerServerEvent('bb:request_creation', cInfo)
-  
+
 end
 
 --- CreateCharacter()
 -- Loads the character creator
 function CreateCharacter(charHash)
 
-  myHash = charHash
-  
   -- DEBUG - Future Note: This will launch the character creator.
   -- For now, we're just going to jump straight to SubmitCharacter()
   SubmitCharacter({
+    hash  = charHash
     model = 'mp_male'
   })
 
@@ -67,13 +70,14 @@ end
 function ReloadCharacter(charInfo)
   -- DEBUG - This is only temporary, to get people into the game
   exports.spawnmanager:spawnPlayer({
-    x = -262.85,
-    y = 793.41,
-    z = 118.09,
-    model = 'mp_male'
+    x     = charInfo['x'],
+    y     = charInfo['y'],
+    z     = charInfo['z'],
+    model = charInfo['model']
   }, function()
     print("DEBUG - Player spawned with their last played character!")
     exports['bb']:ReportPosition(true)
+    SetEntityHeading(PlayerPedId(), charInfo['heading'])
     TriggerEvent('bb:client_loaded')
     TriggerServerEvent('bb:client_loaded')
   end)

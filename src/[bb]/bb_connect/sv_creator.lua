@@ -1,6 +1,7 @@
 
 -- Badges & Bandits: Character Creator Script (SERVER)
 RegisterServerEvent('bb:client_loaded')
+RegisterServerEvent('bb:request_creation')
 
 local hashes = {}
 
@@ -23,24 +24,57 @@ function ApprovalHash(client)
 end
 
 -- RX'd when a client creates a new character
-AddEventHandler('bb:client_loaded', function(modelChoice)
-  
+AddEventHandler('bb:client_loaded', function(isNew)
+
   local client = source
   local uid = exports.bb:UniqueId(client)
-  
-  print("DEBUG - Player created a new character!")
-  if not modelChoice then modelChoice = 'mp_male' end
-  
-  -- SQL: Create the character and return the new character's ID
-  local cid = exports.ghmattimysql:scalarSync(
-    "SELECT CreateCharacter(@pid, @mdl)",
-    {['pid'] = uid, ['mdl'] = modelChoice}
-  )
-  
+  local cid = exports.bb:CharacterId(client)
+
+
+  -- If new character or client doesn't have a character
+  if isNew or cid < 1 then
+
+    print("DEBUG - Player created a new character!")
+    if not modelChoice then modelChoice = 'mp_male' end
+
+    -- SQL: Create the character and return the new character's ID
+    cid = exports.ghmattimysql:scalarSync(
+      "SELECT CreateCharacter(@pid, @mdl)",
+      {['pid'] = uid, ['mdl'] = modelChoice}
+    )
+
+    -- DEBUG - Send a discord welcome message..?
+
+  else
+
+  end
+
   -- Tells the client and the server scripts that the player
-  -- is loaded and ready to execute relevant scripts 
-  TriggerEvent('bb:player_ready', client, uid, cid)
-  TriggerClientEvent('bb:player_ready', client, uid, cid)
-  
-  
+  -- is loaded and ready to execute relevant scripts
+  TriggerEvent('bb:player_ready', client, uid, cid, isNew)
+  TriggerClientEvent('bb:player_ready', client, uid, cid, isNew)
+
+
+end)
+
+-- Server attempts to validate the challenge to allow the character
+AddEventHandler('bb:request_creation', function(charInfo)
+  local client = source
+  if charInfo.hash then
+    if charInfo.hash == hashes[client] then
+      ApprovalHash(client) -- Generate a new one
+      TriggerClientEvent('bb:character_approval', client, true, charInfo)
+
+    else
+      TriggerClientEvent('bb:character_approval', client, false,
+        "Server rejected the character creation challenge."
+      )
+
+    end
+  else
+    TriggerClientEvent('bb:character_approval', client, false,
+      "No challenge presented to server, was this request legit?"
+    )
+
+  end
 end)
