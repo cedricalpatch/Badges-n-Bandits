@@ -17,6 +17,7 @@ rdr3_warning 'I acknowledge that this is a prerelease build of RedM, and I am aw
 game "rdr3"
 
 dependency 'bb'
+
 ui_page "nui/ui.html"
 files {"nui/discord.jpg","nui/ui.html","nui/ui.js","nui/ui.css"}
 client_scripts {"cl_config.lua", "cl_creator.lua", "cl_connect.lua"}

@@ -17,6 +17,7 @@ game "rdr3"
 
 resource_type 'gametype' { name = 'Badges & Bandits'}
 
+dependency 'ghmattimysql'
 client_script "client_main.lua"
 server_script "server_main.lua"
 
