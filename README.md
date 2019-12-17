@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/rhapidfyre/Badges-n-Bandits.svg?branch=master)](https://travis-ci.com/rhapidfyre/Badges-n-Bandits)
 [![Build Status](https://travis-ci.com/rhapidfyre/Badges-n-Bandits.svg?branch=dev)](https://travis-ci.com/rhapidfyre/Badges-n-Bandits)
 # Badges n' Bandits (BNB)
 A Cops and Robbers Gamemode for [RedM](https://redm.gg/)
