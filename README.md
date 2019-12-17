@@ -10,7 +10,7 @@
 ## Description
 RedM BNB is a community-developed gamemode for RedM, a modification of Red Dead Redemption 2. In this non-roleplay oriented gamemode, players join, make their character, and spend time either completing legal jobs (mail courier, fishing, etc), illegal jobs (robbery, gun running, etc), or taking the role of law enforcement.
 
-The current version is 0.1d (DEV). [Visit me on discord](http://discord.gg/FRWpsbq) for support, bugs, or development discussion. If you'd like to help cover the costs of my hosting environments for developing these kinds of scripts, visit me on [Patreon](https://www.patreon.com/fyredev).
+The current version is 0.1d (DEV). [Visit me on discord](http://discord.gg/FRWpsbq) for support, bugs, or development discussion.
 
 
 ## Weekly Update
