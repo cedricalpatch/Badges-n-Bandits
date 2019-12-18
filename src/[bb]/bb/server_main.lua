@@ -246,7 +246,7 @@ function AssignInfo(client, tbl, rejoin)
       PrettyPrint("CID #"..tostring(clInfo[client].charid).." assigned to Player #"..client)
 
     end
-    
+
     clInfo[client].bounty = RetrieveBounty(client)
     TriggerClientEvent('bb:playerinfo', (-1), client, clInfo[client])
 

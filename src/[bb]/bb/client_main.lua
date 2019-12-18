@@ -148,16 +148,22 @@ Citizen.CreateThread(function()
 	end
 end)
 
+--- ReportPosition()
+-- While true, reports position to SQL
+-- When false, function ends. Has to be called again to loop.
+-- @param doReport If true, starts the location reporting loop
 function ReportPosition(doReport)
+  print("DEBUG - ReportPosition()");Wait(600)
   tracker = doReport
-  if tracker then print("DEBUG - Now tracking player's position.\nReporting vector3() to the server every 12 seconds.")
+  if tracker then
+    print("DEBUG - Now tracking position");Wait(600)
     Citizen.CreateThread(function()
       while tracker do
-        local myPos = GetEntityCoords(PlayerPedId())
+        --local myPos = GetEntityCoords(PlayerPedId())
         TriggerServerEvent('bb:save_pos', myPos)
         Citizen.Wait(12000)
       end
-      print("DEBUG - Finished tracking player's position (tracker = FALSE)")
+      print("DEBUG - No longer tracking position");Wait(600)
     end)
   end
 end

@@ -1,7 +1,6 @@
 
 -- Badges & Bandits: Character Creator Script (CLIENT)
 RegisterNetEvent('bb:character_approval')
-local myHash = nil
 
 --- LOCAL CharacterApproved()
 -- RX'd when the server approves of the character client created
@@ -72,17 +71,23 @@ end
 -- @table model, clothes, weapons, gold, cash
 function ReloadCharacter(charInfo)
   -- DEBUG - This is only temporary, to get people into the game
-  print("DEBUG - Reloading existing character.")
+  print("DEBUG - Reloading existing character.");Wait(600)
+  print("X: "..charInfo['x'].." Y: "..charInfo['y'].. " Z: "..charInfo['z']);Wait(600)
+  print("MDL: "..charInfo['model']);Wait(600)
   exports.spawnmanager:spawnPlayer({
     x     = charInfo['x'],
     y     = charInfo['y'],
     z     = charInfo['z'],
     model = charInfo['model']
   }, function()
-    print("DEBUG - Player spawned with their last played character!")
+    print("DEBUG - Player spawned with their last played character!");Wait(600)
     exports.bb:ReportPosition(true)
+    print("DEBUG - Setting heading.");Wait(600)
     SetEntityHeading(PlayerPedId(), charInfo['heading'])
+    print("DEBUG - Dispatching server message.");Wait(600)
     --TriggerEvent('bb:client_loaded')
     TriggerServerEvent('bb:client_loaded', false)
+    print("DEBUG - Finished.");Wait(600)
   end)
 end
+

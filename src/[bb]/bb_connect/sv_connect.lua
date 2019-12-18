@@ -139,7 +139,8 @@ AddEventHandler('bb:create_player', function(isRelog)
     -- If the player is using /relog, display menu and character list
     else
 
-      -- DEBUG - NOT IMPLEMENTED
+      -- DEBUG - NOT IMPLEMENTED YET
+      TriggerClientEvent('bb:character_menu', client)
 
     end
 
