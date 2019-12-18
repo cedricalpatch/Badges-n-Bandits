@@ -72,19 +72,19 @@ function CreateSession(client)
 
   -- Retrieve last played character's information
   exports['ghmattimysql']:execute(
-    "SELECT * FROM characters WHERE player_id = @uid"..
+    "SELECT * FROM characters WHERE player_id = @uid "..
     "ORDER BY lastplayed DESC LIMIT 1",
-    {['uid'] = exports['bb']:UniqueId(client)},
+    {['uid'] = exports.bb:UniqueId(client)},
     function(charInfo)
 
       -- If character exists, load it.
       if charInfo[1] then
         local pName = GetPlayerName(client).."'s"
-        pprint("Reloading "..pName.." last known character.")
         --[[ exports['bb_chat']:DiscordMessage(
           65280, GetPlayerName(client).." has joined the game!", "", ""
         ) ]]
         exports.bb:CharacterId(client, charInfo[1]['id'])
+        pprint("Reloading "..pName.." last played character (CID #"..charInfo[1]['id']..").")
       else
         Citizen.Wait(1000)
         pprint("No characters found for "..GetPlayerName(client)..".")
@@ -110,7 +110,7 @@ end
 -- Received by a client when they're spawned and ready to click play
 AddEventHandler('bb:create_player', function(isRelog)
 
-  local client     = source
+  local client  = source
   local ids     = GetPlayerInformation(client)
   local ustring = GetPlayerName(client).." ("..client..")"
 

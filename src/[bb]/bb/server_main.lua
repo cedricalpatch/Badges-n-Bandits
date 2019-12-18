@@ -136,7 +136,7 @@ function CharacterId(client)
   if not cid then
     cid = exports.ghmattimysql:scalarSync(
       "SELECT id FROM characters WHERE player_id = @uid "..
-      "ORDER BY lastplay DESC LIMIT 1",
+      "ORDER BY lastplayed DESC LIMIT 1",
       {['uid'] = UniqueId(client)}
     )
   end
@@ -246,6 +246,8 @@ function AssignInfo(client, tbl, rejoin)
       PrettyPrint("CID #"..tostring(clInfo[client].charid).." assigned to Player #"..client)
 
     end
+    
+    clInfo[client].bounty = RetrieveBounty(client)
     TriggerClientEvent('bb:playerinfo', (-1), client, clInfo[client])
 
 	end

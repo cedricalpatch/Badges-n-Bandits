@@ -26,17 +26,13 @@ end)
 AddEventHandler('onClientResourceStart', function(resname)
   if GetCurrentResourceName() == resname then
 
-    Citizen.Wait(100)
-
-    print("DEBUG - Requesting for the server to let me spawn.")
-
     Citizen.CreateThread(function()
       -- Keep probing the server until we're loaded
       while not connected do
         TriggerServerEvent('bb:create_player')
         Citizen.Wait(3000)
       end
-      print("DEBUG - The Server has acknowledged my connection.")
+
     end)
   end
 end)

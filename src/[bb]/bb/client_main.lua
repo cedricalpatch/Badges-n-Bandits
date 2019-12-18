@@ -26,6 +26,14 @@ Citizen.CreateThread(function()
 	end
 end)
 
+-- DEBUG - Until I make a death script
+RegisterCommand('respawn', function(source, args, rawCommand)
+local x,y,z = table.unpack(GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 8.0, 0.5))
+NetworkResurrectLocalPlayer(x, y, z + 1.5, 90.0, true, false)
+	ClearPedBloodDamage(PlayerId())
+end)
+---------------------------------------------------------
+
 AddEventHandler('onClientMapStart', function()
   exports.spawnmanager:setAutoSpawn(true)
   exports.spawnmanager:forceRespawn()
