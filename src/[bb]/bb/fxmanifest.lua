@@ -15,7 +15,7 @@ fx_version "adamant"
 rdr3_warning 'I acknowledge that this is a prerelease build of RedM, and I am aware my resources *will* become incompatible once RedM ships.'
 game "rdr3"
 
-resource_type 'gametype' { name = 'Badges & Bandits'}
+--resource_type 'gametype' { name = 'Badges & Bandits'}
 
 dependency 'ghmattimysql'
 client_script "client_main.lua"
