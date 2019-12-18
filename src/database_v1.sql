@@ -58,6 +58,7 @@ DROP TABLE IF EXISTS `characters`;
 CREATE TABLE `characters` (
   `id` int(24) unsigned NOT NULL,
   `player_id` int(24) unsigned NOT NULL,
+  `lastplayed` int(11) unsigned NOT NULL,
   `model` varchar(48) NOT NULL DEFAULT 'mp_male',
   `created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `gold` decimal(12,2) unsigned DEFAULT '0.00',
