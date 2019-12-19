@@ -164,7 +164,7 @@ CREATE TABLE `players` (
   `username` varchar(99) NOT NULL COMMENT 'last known username',
   `ip` varchar(15) DEFAULT NULL COMMENT 'last known ip address',
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'first time played',
-  `lastjoin` timestamp NULL DEFAULT NULL,
+  `lastjoin` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rank` int(4) unsigned NOT NULL DEFAULT '0' COMMENT 'Player VIP TrialMod Mod JrAdmin Admin SrAdmin HeadAdmin Staff Owner',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
